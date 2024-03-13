@@ -12,7 +12,7 @@ type HTTPServerConfig struct {
 func newHTTPServerConfig() HTTPServerConfig {
 	return HTTPServerConfig{
 		host:             getString("HTTP_SERVER_HOST", "localhost"),
-		port:             getString("HTTP_SERVER_PORT", "8080"),
+		port:             getString("PORT", "8080"),
 		readTimoutInSec:  getInt("HTTP_SERVER_READ_TIMEOUT_IN_SEC"),
 		writeTimoutInSec: getInt("HTTP_SERVER_WRITE_TIMEOUT_IN_SEC"),
 	}
