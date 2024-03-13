@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pack Calculator</title>
+</head>
+<body>
+<h1>Pack Sizes Management</h1>
+<div>
+    <h2>Add Pack Size</h2>
+    <input type="number" id="addSizeInput" placeholder="Enter new pack size"/>
+    <button onclick="addPackSize()">Add Size</button>
+</div>
+<div>
+    <h2>Remove Pack Size</h2>
+    <input type="number" id="removeSizeInput" placeholder="Enter pack size to remove"/>
+    <button onclick="removePackSize()">Remove Size</button>
+</div>
+<h2>Current Pack Sizes</h2>
+<ul id="packSizesList"></ul>
+
+<h1>Calculate Packs</h1>
+<div>
+    <input type="number" id="orderSizeInput" placeholder="Enter order size"/>
+    <button onclick="calculatePacks()">Calculate</button>
+</div>
+<h2>Calculation Result</h2>
+<div id="calculationResult"></div>
+
+<script>
+    async function fetchPackSizes() {
+        const response = await fetch('/pack-sizes');
+        const sizes = await response.json();
+        const listElement = document.getElementById('packSizesList');
+        listElement.innerHTML = '';
+        sizes.data.forEach(size => {
+            const item = document.createElement('li');
+            item.textContent = size;
+            listElement.appendChild(item);
+        });
+    }
+
+    async function addPackSize() {
+        const size = document.getElementById('addSizeInput').value;
+        await fetch('/pack-sizes', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({size: parseInt(size, 10)})
+        });
+        fetchPackSizes();
+    }
+
+    async function removePackSize() {
+        const size = document.getElementById('removeSizeInput').value;
+        await fetch('/pack-sizes', {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({size: parseInt(size, 10)})
+        });
+        fetchPackSizes();
+    }
+
+    async function calculatePacks() {
+        const orderSize = document.getElementById('orderSizeInput').value;
+        const response = await fetch('/calculate-packs', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({orderSize: parseInt(orderSize, 10)})
+        });
+        const result = await response.json();
+        const resultDiv = document.getElementById('calculationResult');
+        resultDiv.innerHTML = '';
+        for (const [size, count] of Object.entries(result.data)) {
+            const item = document.createElement('div');
+            item.textContent = `${count} pack(s) of ${size} items`;
+            resultDiv.appendChild(item);
+        }
+    }
+
+    fetchPackSizes();
+</script>
+</body>
+</html>
