@@ -27,3 +27,11 @@ This allows to set up pack sizes and calculate packs for items.
    - Trigger the dockerized functional tests
     `make functional-test`
 
+## Live Website
+
+This is the hosted link. However since it's free, it might take some to come up if it's unused.
+
+https://pack-service.onrender.com/
+
+Free instances spin down with inactivity
+
